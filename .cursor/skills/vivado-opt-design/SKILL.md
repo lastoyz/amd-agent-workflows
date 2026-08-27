@@ -5,11 +5,11 @@ description: Analyze opt_design logs without a live Vivado session. Use when ask
 
 # vivado-opt-design
 
-**Vivado MCP도 라이브 세션도 필요 없다.** 이미 있는 implementation 로그.
+**Neither Vivado MCP nor a live session is required.** Use existing implementation logs.
 
-산출: `vivado_agentic_ai_reports/opt-design-analysis/{REPORT.md,report_data.json,dashboard.html}`
+Output: `vivado_agentic_ai_reports/opt-design-analysis/{REPORT.md,report_data.json,dashboard.html}`
 
-opt가 아직 없으면:
+If opt has not run yet:
 
 ```tcl
 open_project <design>.xpr
@@ -17,18 +17,18 @@ launch_runs impl_1 -to_step opt_design
 wait_on_run impl_1
 ```
 
-로그 후보: `vivado.log`, `<proj>.runs/impl_1/runme.log`, `run.log`.
+Log candidates: `vivado.log`, `<proj>.runs/impl_1/runme.log`, `run.log`.
 
-## 핵심 가드레일
+## Core guardrail
 
-**전체 로그 grep 금지.** 구간만:
+**Do not grep the whole log.** Window only:
 
-- 시작: `Command: opt_design`
-- 끝: `opt_design: Time`
+- Start: `Command: opt_design`
+- End: `opt_design: Time`
 
-`[Opt 31-138]` 등은 link/place에도 나온다.
+Messages such as `[Opt 31-138]` also appear in link/place.
 
-## 추출
+## Extract
 
 ```bash
 sed -n '/Command: opt_design/,/opt_design: Time/p' <logfile> \
@@ -37,7 +37,7 @@ sed -n '/Command: opt_design/,/opt_design: Time/p' <logfile> \
   | grep -A 20 "Opt_design Change Summary"
 ```
 
-`-debug_log`가 있을 때만 셀/넷 이름:
+Cell/net names only when `-debug_log` is present:
 
 ```bash
 sed -n '/Command: opt_design/,/opt_design: Time/p' <logfile> \
@@ -45,20 +45,20 @@ sed -n '/Command: opt_design/,/opt_design: Time/p' <logfile> \
   | sort -u
 ```
 
-- `[Opt 31-1019]` — 어느 DONT_TOUCH 객체가 최적화를 몇 % 막는지
-- `[Opt 31-1020]` — phase별 constrained 개수
+- `[Opt 31-1019]` — which DONT_TOUCH objects blocked what % of optimization
+- `[Opt 31-1020]` — constrained count per phase
 
-금지: 전체 `vivado.log`에서 `Phase`, utilization, `remap`, `[Opt 31-441]` grep.
+Forbidden: grepping the whole `vivado.log` for `Phase`, utilization, `remap`, `[Opt 31-441]`.
 
-Windows: Git Bash / WSL / Python으로 같은 구간을 자른다. PowerShell `sed` 없음.
+Windows: cut the same window with Git Bash / WSL / Python. PowerShell has no `sed`.
 
-## 선택 census (열린 디자인만)
+## Optional census (open design only)
 
 ```tcl
 puts "DONT_TOUCH cells: [llength [get_cells -hier -filter {DONT_TOUCH == TRUE}]]"
 puts "DONT_TOUCH nets:  [llength [get_nets  -hier -filter {DONT_TOUCH == TRUE}]]"
 ```
 
-없으면 JSON census를 0으로.
+If none, write JSON census as 0.
 
-Constrained objects가 있고 `-debug_log`가 없었으면 `opt_design -debug_log` 재실행을 권한다.
+If constrained objects exist and `-debug_log` was not used, recommend re-running `opt_design -debug_log`.

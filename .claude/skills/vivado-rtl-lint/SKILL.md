@@ -5,13 +5,13 @@ description: Run synth_design -lint in Vivado batch mode, parse CSV, write an RT
 
 # vivado-rtl-lint
 
-MCP `vivadoExecute` 조각을 **하나의 batch Tcl**로 모은다. 리포트 파싱은 Vivado 밖 Python.
+Collect MCP `vivadoExecute` fragments into **one batch Tcl**. Parse the report with Python outside Vivado.
 
-산출: `vivado_agentic_ai_reports/rtl-lint/`
+Output: `vivado_agentic_ai_reports/rtl-lint/`
 
-## 순서
+## Sequence
 
-### 1. 프로젝트
+### 1. Project
 
 ```bash
 cd <example>
@@ -58,7 +58,7 @@ vivado -mode batch -source run_rtl_lint.tcl -log vivado_lint.log -journal vivado
 
 ### 3. CSV (Vivado < 26.1)
 
-`.rpt`를 에이전트가 직접 파싱하지 말 것. 예제 스킬의 `parse_lint_report.py` (7컬럼).
+Do not have the agent parse the raw `.rpt`. Use the example skill's `parse_lint_report.py` (7 columns).
 
 ```bash
 python parse_lint_report.py linter.rpt linter.csv
@@ -66,11 +66,11 @@ python parse_lint_report.py linter.rpt linter.csv
 
 ### 4. `rtl_lint_report.md`
 
-CSV 이슈마다 수정 방향. Vivado가 0건이면 0건. 주석을 코드 이슈로 오인하지 말 것.
+One fix direction per CSV issue. If Vivado reports 0 issues, report 0. Do not treat comments as code issues.
 
-## 가드레일
+## Guardrails
 
-- `synth_design`에 **반드시 `-file`**.
-- top이 여러 개면 사용자에게 묻고 멈춘다.
-- 문법 오류로 elaborate 실패하면 lint를 쓰지 말고 먼저 고친다.
-- MCP 금지.
+- `synth_design` **must** include `-file`.
+- If there are multiple tops, ask the user and stop.
+- If elaborate fails on syntax errors, fix those first. Do not lint yet.
+- No MCP.

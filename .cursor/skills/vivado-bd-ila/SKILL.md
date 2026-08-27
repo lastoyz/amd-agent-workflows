@@ -5,15 +5,15 @@ description: Insert System ILA or AXIS-ILA into a Vivado block design using Tcl.
 
 # vivado-bd-ila
 
-삽입 Tcl은 batch로도 된다. 캔버스 확인은 GUI.
+Insertion Tcl can run in batch. Canvas check needs GUI.
 
-산출: `vivado_agentic_ai_reports/bd-ila-insertion/`
+Output: `vivado_agentic_ai_reports/bd-ila-insertion/`
 
-## 필수 0단계
+## Required step 0
 
-테이블 값을 그대로 쓰지 말 것. temp IP로 `report_property CONFIG.*`.
+Do not copy table values as-is. Discover with a temp IP and `report_property CONFIG.*`.
 
-비-Versal:
+Non-Versal:
 
 ```tcl
 create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila:1.1 temp_discover
@@ -21,11 +21,11 @@ report_property [get_bd_cells temp_discover] CONFIG.*
 delete_bd_objs [get_bd_cells temp_discover]
 ```
 
-Versal: `xilinx.com:ip:axis_ila:1.0` + **AXI Debug Hub** + CIPS/NoC. 허브는 자동 생성되지 않는다.
+Versal: `xilinx.com:ip:axis_ila:1.0` + **AXI Debug Hub** + CIPS/NoC. The hub is not auto-created.
 
-AXI+native면 `set_property CONFIG.C_MON_TYPE {MIX}` 를 **별도 호출**.
+For AXI+native, call `set_property CONFIG.C_MON_TYPE {MIX}` **separately**.
 
-연결 전 핀:
+Pins before connect:
 
 ```tcl
 foreach pin [get_bd_intf_pins -of_objects [get_bd_cells <cell>]] { puts $pin }
@@ -36,4 +36,4 @@ validate_bd_design
 save_bd_design
 ```
 
-REPORT.md에 **실제 이름**으로 재현 Tcl을 남긴다. MCP 금지.
+Leave a reproduction Tcl in REPORT.md using **real names**. No MCP.

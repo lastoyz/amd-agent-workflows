@@ -5,9 +5,9 @@ description: Choose Vivado batch vs GUI vs tcl vs terminal-only when running FPG
 
 # vivado-modes
 
-MCP `vivado_start` + `vivado_execute` 루프를 이 세 모드로 나눈다. PATH에 `vivado`가 있어야 한다. Windows 예: `C:\Xilinx\Vivado\<ver>\bin\vivado.bat`
+Split the MCP `vivado_start` + `vivado_execute` loop into these three modes. `vivado` must be on PATH. Windows example: `C:\Xilinx\Vivado\<ver>\bin\vivado.bat`
 
-## 명령
+## Commands
 
 ```bash
 vivado -mode batch -source run.tcl -log vivado_batch.log -journal vivado_batch.jou
@@ -16,44 +16,44 @@ vivado -mode gui -source highlight.tcl
 vivado -mode tcl
 ```
 
-작업 디렉터리는 `.xpr` 또는 `recreate_project.tcl`이 있는 예제 폴더.
+Working directory is the example folder that has `.xpr` or `recreate_project.tcl`.
 
 ```tcl
 puts "PWD=[pwd]"
 puts "Vivado [version -short]"
 ```
 
-## MCP → 로컬
+## MCP → local
 
-| MCP | 로컬 |
+| MCP | Local |
 | --- | --- |
-| `vivado_start` | 해당 dir에서 `vivado -mode gui` 또는 `batch -source` |
-| `vivado_execute` | GUI Tcl Console에 붙여넣기, 또는 `.tcl`에 모아 `source` |
-| 한 줄 semicolon Tcl | batch에서는 **여러 줄 `.tcl`** |
+| `vivado_start` | From that dir, `vivado -mode gui` or `batch -source` |
+| `vivado_execute` | Paste into the GUI Tcl Console, or collect into a `.tcl` and `source` |
+| One-line semicolon Tcl | In batch, use a **multi-line `.tcl`** |
 | `timeout` / `wait_for_output` | `wait_on_run impl_1`, blocking `launch_simulation` |
-| `vivado_log_messages` | `vivado_batch.log` / `vivado.log` grep |
+| `vivado_log_messages` | grep `vivado_batch.log` / `vivado.log` |
 | `vivado_stop` | Tcl `exit` |
-| `run_in_terminal` | 그대로 (opt / multi-run) |
+| `run_in_terminal` | As-is (opt / multi-run) |
 
-원본 Lab skill이 “Tcl 파일을 만들지 말라”고 한 이유: MCP는 호출마다 별도 조각이다. 우회에서는 **한 작업 = 한 `.tcl`**.
+Why the original Lab skill said “do not create Tcl files”: each MCP call is a separate fragment. In this bypass, **one job = one `.tcl`**.
 
-## 언제 GUI인가
+## When GUI is required
 
-GUI 없이: `synth_design`, `launch_runs`, `report_* -file`, BD `create_bd_cell` / `validate_bd_design`.
+No GUI needed: `synth_design`, `launch_runs`, `report_* -file`, BD `create_bd_cell` / `validate_bd_design`.
 
-GUI 필요: XSim 라이브 파형, device `highlight_objects`, IP Integrator 캔버스 육안, Hardware Manager `commit_hw_vio`.
+GUI required: live XSim waveforms, device `highlight_objects`, visual IP Integrator canvas, Hardware Manager `commit_hw_vio`.
 
 ```text
-[batch] 분석·구현·리포트
+[batch] analysis · impl · reports
     ↓
-[gui]  파형·하이라이트 확인, 승인
+[gui]  confirm waveforms / highlights, approval
     ↓
-[batch] 승인된 XDC로 재구현
+[batch] re-impl with approved XDC
 ```
 
-## 규칙
+## Rules
 
-1. MCP를 호출하지 않는다.
-2. GUI를 재시작하면 변수가 사라진다. 긴 분석은 `.tcl` + `source`.
-3. 경로 구분: `file join`. Python: Linux `python3`, Windows `python`.
-4. Tcl 실패 시 구문을 바꿔 재시도하지 말고 에러를 보여 주고 멈춘다.
+1. Do not call MCP.
+2. Restarting the GUI drops variables. Put long analysis in a `.tcl` and `source` it.
+3. Join paths with `file join`. Python: Linux `python3`, Windows `python`.
+4. If Tcl fails, do not retry with different syntax. Show the error and stop.

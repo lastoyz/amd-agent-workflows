@@ -1,100 +1,101 @@
 # Official AMD sources
 
-이 폴더는 **AMD 공식 Git을 그대로 따라가기 위한 자리**다. 우리 skill(`../skills/`)과 섞지 않는다.
+This folder is **where official AMD Git is tracked as-is**. Do not mix it with our skills (`../skills/`).
 
-클론:
+Clone:
 
 ```bash
 git clone --recurse-submodules https://github.com/lastoyz/amd-agent-workflows.git
-# 이미 받은 저장소면
+# if the repo is already cloned
 git submodule update --init --depth 1
 ```
 
-큰 레포(mlir-aie ~2 GB, TraceLens ~1.3 GB)는 서브모듈로 넣지 않았다. 아래 표의 **원 소스 URL**로 따로 확인한다.
+Large repos (mlir-aie ~2 GB, TraceLens ~1.3 GB) are not submodules. Check them separately via the **upstream URL** in the tables below.
 
-## 이 폴더 구조
+## Layout of this folder
 
 ```
 official/
-├── README.md                      ← 이 파일 (카탈로그)
-├── mlir-aie-skills/               ← Xilinx/mlir-aie 의 skills/ 만 스냅샷 (서브폴더)
+├── README.md                      ← this file (catalog)
+├── mlir-aie-skills/               ← skills/ snapshot from Xilinx/mlir-aie (subfolder)
 ├── amd-skills/                    ← submodule → github.com/amd/skills
 ├── ai-assisted-vitis/             ← submodule → github.com/Xilinx/ai-assisted-vitis
 ├── fpl26-optimization-contest/    ← submodule → github.com/Xilinx/fpl26_optimization_contest
 └── magpie/                        ← submodule → github.com/AMD-AGI/Magpie
 ```
 
-라이선스·저작권은 각 원 저장소 것을 따른다. 수정하지 말고 업스트림 SHA만 올린다.
+License and copyright follow each upstream repo. Do not edit the clones; bump the upstream SHA only.
 
-## 서브모듈 (이 저장소에 클론됨)
+## Submodules (cloned into this repo)
 
-| 로컬 경로 | 원 소스 | 기본 브랜치 | 왜 가져왔나 |
+| Local path | Upstream | Default branch | Why we pulled it |
 | --- | --- | --- | --- |
-| [amd-skills/](amd-skills/) | https://github.com/amd/skills | `main` | AMD 전사 Agent Skills 카탈로그. FPGA 없음. 형식·설치 방법 참고. |
-| [ai-assisted-vitis/](ai-assisted-vitis/) | https://github.com/Xilinx/ai-assisted-vitis | `main` | 공식 Vitis skill-hub: `vhls-opt`, `xsct-to-python-converter` |
-| [fpl26-optimization-contest/](fpl26-optimization-contest/) | https://github.com/Xilinx/fpl26_optimization_contest | `main` | 공식 VivadoMCP + RapidWrightMCP (MCP를 **쓰는** 쪽) |
-| [magpie/](magpie/) | https://github.com/AMD-AGI/Magpie | `main` | GPU 평가. **MCP 없을 때 skill로 CLI 대체** 패턴 (`docs/how-to/mcp-and-skills.md`) |
+| [amd-skills/](amd-skills/) | https://github.com/amd/skills | `main` | AMD company-wide Agent Skills catalog. No FPGA. Reference for format and install. |
+| [ai-assisted-vitis/](ai-assisted-vitis/) | https://github.com/Xilinx/ai-assisted-vitis | `main` | Official Vitis skill-hub: `vhls-opt`, `xsct-to-python-converter` |
+| [fpl26-optimization-contest/](fpl26-optimization-contest/) | https://github.com/Xilinx/fpl26_optimization_contest | `main` | Official VivadoMCP + RapidWrightMCP (the side that **uses** MCP) |
+| [magpie/](magpie/) | https://github.com/AMD-AGI/Magpie | `main` | GPU eval. Official pattern for **replacing MCP with CLI skills** (`docs/how-to/mcp-and-skills.md`) |
 
-업데이트:
+Update:
 
 ```bash
 git submodule update --remote --depth 1
 ```
 
-## 서브폴더 스냅샷 (부분만)
+## Subfolder snapshot (partial)
 
-| 로컬 경로 | 원 소스 | 가져온 것 | 전체 레포를 안 넣은 이유 |
+| Local path | Upstream | What we took | Why not the full repo |
 | --- | --- | --- | --- |
-| [mlir-aie-skills/](mlir-aie-skills/) | https://github.com/Xilinx/mlir-aie | `skills/` 만 | 전체 ~2.1 GB. AIE/NPU `SKILL.md` 파이프라인만 필요 |
+| [mlir-aie-skills/](mlir-aie-skills/) | https://github.com/Xilinx/mlir-aie | `skills/` only | Full tree ~2.1 GB. We only need the AIE/NPU `SKILL.md` pipeline |
 
-커밋 SHA·날짜는 [mlir-aie-skills/SOURCE.txt](mlir-aie-skills/SOURCE.txt). 최신으로 맞출 때 원 레포 `skills/`를 다시 복사하고 SOURCE.txt를 고친다.
+Commit SHA and date: [mlir-aie-skills/SOURCE.txt](mlir-aie-skills/SOURCE.txt). To refresh, recopy `skills/` from upstream and update SOURCE.txt.
 
-## 링크만 (클론하지 않음 — 따로 확인)
+## Link only (not cloned — check separately)
 
 ### Adaptive Computing / FPGA (github.com/Xilinx)
 
-| URL | 볼 곳 | 메모 |
+| URL | Look at | Notes |
 | --- | --- | --- |
-| https://github.com/Xilinx/mlir-aie | `skills/` | 전체 툴체인. 스냅샷은 위 `mlir-aie-skills/` |
-| https://github.com/Xilinx/mlir-aie/tree/main/skills | README + 5 skill | baseline → presim → bringup → kernel-opt → dataflow-opt |
-| https://github.com/Xilinx/RapidWright | 루트 | fpl26 이 서브모듈로 씀. DCP 브리지 |
-| https://github.com/Xilinx/Vitis-Tutorials/tree/2026.1/Embedded_Software/Feature_Tutorials/04-vitis_scripting_flows | `vitis -s` 튜토리얼 | 사람용 MD. Agent `SKILL.md` 아님 |
-| https://github.com/Xilinx/Vivado-Design-Tutorials | 랩 Tcl | AI skill 아님 |
-| https://docs.amd.com/r/en-US/ug1702-vitis-accelerated-reference/Using-AI-Features-of-the-Vitis-Unified-IDE | UG1702 AI Features | IDE 안 `vivado-doc-server` MCP, `ai-features.skills.skillDirectories` |
+| https://github.com/Xilinx/mlir-aie | `skills/` | Full toolchain. Snapshot is `mlir-aie-skills/` above |
+| https://github.com/Xilinx/mlir-aie/tree/main/skills | README + 5 skills | baseline → presim → bringup → kernel-opt → dataflow-opt |
+| https://github.com/Xilinx/RapidWright | root | Used as a submodule by fpl26. DCP bridge |
+| https://github.com/Xilinx/Vitis-Tutorials/tree/2026.1/Embedded_Software/Feature_Tutorials/04-vitis_scripting_flows | `vitis -s` tutorial | Human-facing MD. Not an agent `SKILL.md` |
+| https://github.com/Xilinx/Vivado-Design-Tutorials | lab Tcl | Not an AI skill |
+| https://docs.amd.com/r/en-US/ug1702-vitis-accelerated-reference/Using-AI-Features-of-the-Vitis-Unified-IDE | UG1702 AI Features | In-IDE `vivado-doc-server` MCP, `ai-features.skills.skillDirectories` |
 
-ECS Lab Vivado Agent Skill(`rtl-lint` 등)의 공개 Git은 없다. 랩 zip / EA lounge.
+ECS Lab Vivado Agent Skills (`rtl-lint` and similar) have no public official Git. Lab zip / EA lounge only.
 
-### 전사 스킬 · 에이전트 런타임 (github.com/amd)
+### Company-wide skills · agent runtime (github.com/amd)
 
-| URL | 볼 곳 | 메모 |
+| URL | Look at | Notes |
 | --- | --- | --- |
 | https://github.com/amd/skills | `skills/`, `README.md` | `npx skills add amd/skills`. Ryzen AI / Instinct / ROCm |
-| https://github.com/amd/gaia | `.claude/skills/`, docs/spec | 로컬 에이전트. FPGA 아님 |
-| https://github.com/amd/Quark | `.claude/skills/` | 양자화 워크플로 |
+| https://github.com/amd/gaia | `.claude/skills/`, docs/spec | Local agent. Not FPGA |
+| https://github.com/amd/Quark | `.claude/skills/` | Quantization workflows |
 
-### GPU 에이전트 (github.com/AMD-AGI)
+### GPU agents (github.com/AMD-AGI)
 
-| URL | 볼 곳 | 메모 |
+| URL | Look at | Notes |
 | --- | --- | --- |
-| https://github.com/AMD-AGI/Magpie | `skills/magpie/`, `docs/how-to/mcp-and-skills.md` | 서브모듈로도 있음 |
-| https://github.com/AMD-AGI/TraceLens | Agent/Analysis skills | ~1.3 GB. 링크만 |
-| https://github.com/AMD-AGI/Hyperloom | `src/hyperloom/inference_optimizer/SKILL.md` | ~54 MB. 링크만 |
-| https://github.com/AMD-AGI/maxtext-slurm | `skills/` | Slurm/MaxText 잡 스킬 다수 |
-| https://github.com/AMD-AGI/Apex | 루트 | GPU 커널 최적화 에이전트 |
-| https://github.com/AMD-AGI/AgentKernelArena | 루트 | 커널 에이전트 벤치 |
+| https://github.com/AMD-AGI/Magpie | `skills/magpie/`, `docs/how-to/mcp-and-skills.md` | Also a submodule |
+| https://github.com/AMD-AGI/TraceLens | Agent/Analysis skills | ~1.3 GB. Link only |
+| https://github.com/AMD-AGI/Hyperloom | `src/hyperloom/inference_optimizer/SKILL.md` | ~54 MB. Link only |
+| https://github.com/AMD-AGI/maxtext-slurm | `skills/` | Many Slurm/MaxText job skills |
+| https://github.com/AMD-AGI/Apex | root | GPU kernel optimization agent |
+| https://github.com/AMD-AGI/AgentKernelArena | root | Kernel agent bench |
 
-## 우리 코드와의 관계
+## Relation to our code
 
-| 우리가 쓰는 것 | 공식에서 가져오는 것 |
+| What we use | What we take from official |
 | --- | --- |
-| `../skills/vitis-hls` | `ai-assisted-vitis/skill-hub/vhls-opt` 가 더 김. 공식 우선 |
+| `../skills/vitis-hls` | `ai-assisted-vitis/skill-hub/vhls-opt` is longer. Prefer official |
 | `../skills/vitis-xsct` | `ai-assisted-vitis/skill-hub/xsct-to-python-converter` |
-| `../skills/vivado-*` | 공개 공식 대응 없음. Lab MCP skill의 Tcl 우회 |
-| MCP 없이 CLI | Magpie `mcp-and-skills.md` 와 같은 패턴 |
+| `../skills/vivado-*` | No public official counterpart. Tcl bypass of Lab MCP skills |
+| CLI without MCP | Same pattern as Magpie `mcp-and-skills.md` |
 
-## 미러
+## Mirrors
 
-| 호스트 | 이 폴더 |
+| Host | This folder |
 | --- | --- |
-| GitHub | https://github.com/lastoyz/amd-agent-workflows/tree/main/official |
-| GitLab (사내) | http://192.168.10.97:8080/jose/amd-agent-workflows/-/tree/main/official |
+| GitHub (English, `main`) | https://github.com/lastoyz/amd-agent-workflows/tree/main/official |
+| GitHub (Korean, `ko`) | https://github.com/lastoyz/amd-agent-workflows/tree/ko/official |
+| GitLab (internal Korean mirror) | http://192.168.10.97:8080/jose/amd-agent-workflows/-/tree/main/official |

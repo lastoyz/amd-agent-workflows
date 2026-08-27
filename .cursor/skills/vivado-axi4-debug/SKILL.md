@@ -5,15 +5,15 @@ description: Debug AXI4 protocol bugs with XSim. Batch can capture simulate.log;
 
 # vivado-axi4-debug
 
-batch로 시뮬 **로그**는 가능. FAIL/PASS **파형은 GUI 필수**.
+Batch can capture simulation **logs**. FAIL/PASS **waveforms require GUI**.
 
 ```text
-[gui] launch_simulation → create_wave_config _FAIL → 사용자 pause
-[RTL] 사용자가 "fix it" 한 뒤에만
-[gui] close_sim → 재시뮬 → _PASS 파형 → pause
+[gui] launch_simulation → create_wave_config _FAIL → user pause
+[RTL] only after the user says "fix it"
+[gui] close_sim → re-sim → _PASS waveform → pause
 ```
 
-테스트벤치를 한 번에 전부 돌리지 않는다. 하나 끝나면 멈춘다.
+Do not run the whole testbench at once. Stop after each one.
 
 ## GUI
 
@@ -26,11 +26,11 @@ set_property top <tb_name> [get_filesets <sim_set>]
 launch_simulation -simset [get_filesets <sim_set>] -mode behavioral
 ```
 
-blocking. 로그: `<proj>.sim/<sim_set>/behav/xsim/simulate.log` — assertion 이름, 실패 시각, 채널(AW/W/B/AR/R).
+Blocking. Log: `<proj>.sim/<sim_set>/behav/xsim/simulate.log` — assertion name, fail time, channel (AW/W/B/AR/R).
 
-## FAIL 파형 (같은 GUI 세션)
+## FAIL waveform (same GUI session)
 
-`open_wave_database`는 정적 WDB용. 라이브면 `create_wave_config`.
+`open_wave_database` is for static WDB. Live: `create_wave_config`.
 
 ```tcl
 foreach wc [get_wave_configs] { close_wave_config -force $wc }
@@ -39,10 +39,10 @@ set g [add_wave_group {AW Channel}]
 add_wave -into $g -color yellow /<tb_name>/axi_awvalid /<tb_name>/axi_awready
 ```
 
-신호는 **TB 탑 레벨**. `add_wave -into "AW Channel"` 문자열은 실패. `$g`가 같은 세션에 남아 있어야 한다.
+Signals are **TB top level**. `add_wave -into "AW Channel"` as a string fails. `$g` must remain in the same session.
 
 ## HITL
 
-버그마다: 시뮬 → FAIL 파형 → **멈춤** → 사용자 A/B/C 또는 “fix it” → RTL 최소 수정 → PASS 파형.
+Per bug: sim → FAIL waveform → **stop** → user A/B/C or “fix it” → minimal RTL change → PASS waveform.
 
-MCP `vivado_start/execute/stop` 금지.
+Do not call MCP `vivado_start` / `vivadoExecute` / `mcp_vivado-*`.

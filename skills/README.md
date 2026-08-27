@@ -1,8 +1,8 @@
 # skills/
 
-각 디렉터리의 `SKILL.md` 는 YAML frontmatter(`name`, `description`)를 가진 Agent Skill이다.
+Each directory's `SKILL.md` is an Agent Skill with YAML frontmatter (`name`, `description`).
 
-- Cursor: 이 저장소를 열면 `.cursor/skills/` 복사본을 쓴다. 다른 프로젝트는 루트 `install.ps1` / `install.sh`.
-- Claude Code: `.claude/skills/` 또는 `~/.claude/skills/`.
+- Cursor: opening this repo uses the copy in `.cursor/skills/`. For other projects, use the root `install.ps1` / `install.sh`.
+- Claude Code: `.claude/skills/` or `~/.claude/skills/`.
 
-인덱스는 저장소 [README.md](../README.md) 와 [AGENTS.md](../AGENTS.md).
+Index: repo [README.md](../README.md) and [AGENTS.md](../AGENTS.md).

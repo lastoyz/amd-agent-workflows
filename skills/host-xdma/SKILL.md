@@ -5,39 +5,39 @@ description: Write or run PCIe XDMA userspace tests against /dev/xdma* (Linux) o
 
 # host-xdma
 
-대상: AMD/Xilinx **DMA/Bridge Subsystem for PCI Express (XDMA)** 를 endpoint로 쓰는 카드. Alveo `xclbin` 은 `host-xrt`.
+Target: cards that use AMD/Xilinx **DMA/Bridge Subsystem for PCI Express (XDMA)** as the endpoint. Alveo `xclbin` is `host-xrt`.
 
-레퍼런스 드라이버: [Xilinx/dma_ip_drivers](https://github.com/Xilinx/dma_ip_drivers) `XDMA/linux-kernel`.
+Reference driver: [Xilinx/dma_ip_drivers](https://github.com/Xilinx/dma_ip_drivers) `XDMA/linux-kernel`.
 
-## Linux 디바이스
+## Linux devices
 
-프로그래밍·리부트 후:
+After programming and reboot:
 
 ```text
 /dev/xdma0_h2c_0     host → card DMA
 /dev/xdma0_c2h_0     card → host DMA
-/dev/xdma0_user      user BAR (AXI-lite 등)
-/dev/xdma0_bypass    bypass BAR (있으면)
-/dev/xdma0_events_0  인터럽트
+/dev/xdma0_user      user BAR (AXI-lite etc.)
+/dev/xdma0_bypass    bypass BAR (if present)
+/dev/xdma0_events_0  interrupt
 ```
 
-없으면 `lspci -d 10ee:` 와 `dmesg | grep -i xdma`. 모듈 미로드면 드라이버부터. Windows는 벤더 XDMA inf/sys — 경로를 사용자에게 확인.
+If missing: `lspci -d 10ee:` and `dmesg | grep -i xdma`. If the module is not loaded, start with the driver. Windows uses the vendor XDMA inf/sys — confirm the path with the user.
 
-## 앱 규칙
+## App rules
 
-- 오프셋·길이는 **IP 주소맵**(Vivado BD Address Editor)과 일치. 매직 넘버 추측 금지.
-- DMA: `h2c`에 write, `c2h`에 read. 길이는 정렬(보통 64B/4KB)을 IP 설정에 맞춘다.
-- 레지스터: `user` fd에 `pread`/`pwrite` 또는 mmap. 폭은 32/64를 맵에 맞게.
-- 큰 버퍼는 hugepage/정렬 `posix_memalign`.
-- 한 번에 전체 프레임워크를 생성하지 말 것. 먼저 4B scratch, 그다음 4KB DMA.
+- Offsets and lengths must match the **IP address map** (Vivado BD Address Editor). Do not guess magic numbers.
+- DMA: write to `h2c`, read from `c2h`. Align lengths (typically 64B/4KB) to the IP setting.
+- Registers: `pread`/`pwrite` or mmap on the `user` fd. Width 32/64 per the map.
+- Large buffers: hugepage / aligned `posix_memalign`.
+- Do not generate a full framework at once. First 4B scratch, then 4KB DMA.
 
-최소 스모크 (개념):
+Minimal smoke (concept):
 
 ```bash
-# user BAR 오프셋은 맵을 확인한 뒤에만
+# user BAR offset only after confirming the map
 python -c "import os; os.pwrite(os.open('/dev/xdma0_user', os.O_RDWR), b'\\x01\\x00\\x00\\x00', OFFSET)"
 ```
 
-C는 드라이버 레포 `tools/`의 `dma_to_device` / `dma_from_device` 패턴을 따른다.
+For C, follow `dma_to_device` / `dma_from_device` in the driver repo `tools/`.
 
-실패 시: 디바이스 노드 → `lspci` BAR → FPGA가 해당 bit인지. 앱 재작성으로 우회하지 말 것. MCP 금지.
+On failure: device node → `lspci` BAR → confirm the FPGA has that bit. Do not work around by rewriting the app. No MCP.

@@ -5,34 +5,34 @@ description: Close timing after post-route classification. Draft timing_fixes.xd
 
 # vivado-timing-closure
 
-선행: `vivado-post-route` 분류. **순서를 뒤집지 말 것.**
+Prerequisite: `vivado-post-route` classification. **Do not reverse the order.**
 
 ```text
-Gate1  분석 승인
-[tcl]  timing_fixes.xdc (실제 이름)
-Gate2  제약 승인
-[batch] 재구현 (최대 3회)
+Gate1  analysis approval
+[tcl]  timing_fixes.xdc (real names)
+Gate2  constraint approval
+[batch] re-impl (max 3 times)
 ```
 
-## 가드레일
+## Guardrails
 
-- placeholder 이름 금지. `get_cells` / `get_nets`로 확인된 이름만.
-- `set_property DONT_TOUCH FALSE` — Tcl에서 `0`은 truthy.
-- XDC에서 `reset_property` 금지.
-- LUT_REMAP 쓰면 bounding FF의 DONT_TOUCH도 끈다.
-- 같은 클럭 쌍 `set_clock_groups`가 `set_max_delay -datapath_only`를 덮어씀 → CDC는 per-path `set_false_path`.
-- 동기 클럭에 async exception 금지 → multicycle.
-- 3회 실패하면 escalate.
+- No placeholder names. Only names confirmed with `get_cells` / `get_nets`.
+- `set_property DONT_TOUCH FALSE` — in Tcl, `0` is truthy.
+- Do not use `reset_property` in XDC.
+- If you use LUT_REMAP, also turn off DONT_TOUCH on the bounding FFs.
+- `set_clock_groups` on the same clock pair overrides `set_max_delay -datapath_only` → for CDC use per-path `set_false_path`.
+- Do not put async exceptions on synchronous clocks → multicycle.
+- After 3 failures, escalate.
 
-## 재실행
+## Re-run
 
-remap 속성은 annotation. `opt_design` 없으면 무효. 시작점은 **post-opt DCP**, routed DCP 아님. `read_xdc -unmanaged` (`source` 아님).
+Remap properties are annotations. They do nothing without `opt_design`. Start from the **post-opt DCP**, not the routed DCP. Use `read_xdc -unmanaged` (not `source`).
 
-| XDC | 접근 |
+| XDC | Approach |
 | --- | --- |
-| property만 (`LUT_REMAP`, `DONT_TOUCH`, …) | post-opt DCP + `read_xdc` + `opt_design` + place/route |
-| exception만 | `add_files` + `reset_run impl_1 -from_step place_design` |
-| 둘 다 / pblock / SLR | full `reset_run impl_1` |
+| properties only (`LUT_REMAP`, `DONT_TOUCH`, …) | post-opt DCP + `read_xdc` + `opt_design` + place/route |
+| exceptions only | `add_files` + `reset_run impl_1 -from_step place_design` |
+| both / pblock / SLR | full `reset_run impl_1` |
 
 ```tcl
 close_design -quiet
@@ -46,4 +46,4 @@ wait_on_run impl_1
 vivado -mode batch -source rerun_impl.tcl -log rerun_impl.log
 ```
 
-재실행 후 WNS/TNS/failing count를 베이스라인과 비교. 안 좋아지면 Gate2부터. MCP 금지.
+After the re-run, compare WNS/TNS/failing count to the baseline. If worse, go back to Gate2. No MCP.

@@ -5,27 +5,27 @@ description: Compare multiple Vivado impl_* runs from existing timing/utilizatio
 
 # vivado-multi-run
 
-**라이브 Vivado 불필요.** 완료된 `impl_*` 리포트만.
+**No live Vivado required.** Completed `impl_*` reports only.
 
-산출: `vivado_agentic_ai_reports/multi-run-analysis/{REPORT.md,report_data.json,dashboard.html}`
+Output: `vivado_agentic_ai_reports/multi-run-analysis/{REPORT.md,report_data.json,dashboard.html}`
 
-런이 없으면 선행으로 `launch_runs impl_1 impl_2 …` 후 `wait_on_run`. 이 skill은 **읽기만**.
+If runs do not exist, first `launch_runs impl_1 impl_2 …` then `wait_on_run`. This skill is **read-only**.
 
-## 파일
+## Files
 
 ```
 <proj>.runs/impl_1/
 <proj>.runs/impl_2/
 ```
 
-| 용도 | 파일 예 |
+| Use | File examples |
 | --- | --- |
-| 타이밍 | `*timing_summary*.rpt` |
+| timing | `*timing_summary*.rpt` |
 | utilization | `*utilization*.rpt` |
-| 혼잡 | `*congestion*`, design_analysis |
-| strategy | runme Tcl / log의 `-directive` |
+| congestion | `*congestion*`, design_analysis |
+| strategy | `-directive` in runme Tcl / log |
 
-`report_timing_summary` 전문을 컨텍스트에 넣지 말 것. Design Timing Summary 표만.
+Do not put a full `report_timing_summary` into context. Design Timing Summary table only.
 
 ```bash
 grep -A 20 "Design Timing Summary" <run>/timing_summary.rpt | head -25
@@ -33,15 +33,15 @@ grep -A 20 "Design Timing Summary" <run>/timing_summary.rpt | head -25
 
 PowerShell: `Select-String -Path .\timing_summary.rpt -Pattern "Design Timing Summary" -Context 0,20`
 
-추출: WNS, TNS, failing endpoints, WHS, THS.
+Extract: WNS, TNS, failing endpoints, WHS, THS.
 
-## 순위
+## Ranking
 
-WNS 우선, 동점이면 TNS, 그다음 failing path 수. route 실패·리포트 없음은 순위에서 빼고 anomaly.
+WNS first; on a tie, TNS; then failing path count. Drop route failures and missing reports from the ranking as anomalies.
 
-place → phys_opt → route 각 단계 timing summary가 있으면 WNS 열을 나란히.
+If each of place → phys_opt → route has a timing summary, put WNS columns side by side.
 
-## 가드레일
+## Guardrails
 
-- DCP를 열거나 MCP를 쓰지 않는다.
-- 런이 2개 미만이면 비교하지 말고 런을 더 돌리라고 한다.
+- Do not open a DCP or use MCP.
+- If there are fewer than 2 runs, do not compare. Ask for more runs.

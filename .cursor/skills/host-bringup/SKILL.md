@@ -5,32 +5,32 @@ description: Align Vivado bitstream/XSA, Vitis ELF, and host software into one b
 
 # host-bringup
 
-보드 반입은 세 산출물이 같은 리비전이어야 한다. 섞지 말 것.
+Board bring-up requires the three artifacts to be the same revision. Do not mix them.
 
 ```text
-Vivado  (vivado-modes / 해당 skill)
+Vivado  (vivado-modes / matching skill)
     → .bit / .pdi  +  .xsa (fixed)
 Vitis   (vitis-unified)
-    → .elf  (+ boot.bin / BOOT.BIN 이면 그 패키지)
-host_sw (host-xdma 또는 host-xrt)
-    → 유저 앱
+    → .elf  (+ boot.bin / BOOT.BIN if that package exists)
+host_sw (host-xdma or host-xrt)
+    → user app
 ```
 
-## 순서
+## Sequence
 
-1. **하드웨어 ID 확인**: part, PCIe ID, BAR 크기, DMA IP(XDMA vs AXI DMA vs QDMA vs XRT). 사용자/XSA/xsa.xml과 맞춘다.
-2. **FPGA 프로그래밍**: JTAG(`vivado` HW Manager 또는 `program_hw_devices`) 또는 플래시/SD BOOT.BIN. 호스트 드라이버보다 **먼저**.
-3. **펌웨어**: MicroBlaze/PS ELF는 xsdb/`launch_hw` 또는 부트로더. PCIe endpoint만 있으면 ELF가 없을 수 있다.
-4. **호스트**: `lspci` / Device Manager 후 XDMA 또는 XRT 스킬.
-5. **스모크**: BAR scratch 또는 작은 DMA loopback. 실패하면 앱을 키우지 말고 멈춘다.
+1. **Confirm hardware IDs**: part, PCIe ID, BAR size, DMA IP (XDMA vs AXI DMA vs QDMA vs XRT). Match user / XSA / xsa.xml.
+2. **Program the FPGA**: JTAG (`vivado` HW Manager or `program_hw_devices`) or flash/SD BOOT.BIN. **Before** the host driver.
+3. **Firmware**: MicroBlaze/PS ELF via xsdb/`launch_hw` or a bootloader. A PCIe-endpoint-only design may have no ELF.
+4. **Host**: `lspci` / Device Manager, then the XDMA or XRT skill.
+5. **Smoke**: BAR scratch or a small DMA loopback. On failure, stop. Do not grow the app.
 
-## 리포트
+## Report
 
-`reports/bringup.md`에 기록:
+Record in `reports/bringup.md`:
 
-- Vivado 프로젝트·commit·bit 경로
-- XSA 경로·생성 시각
-- ELF 경로
-- 호스트 앱 커맨드와 결과 (PASS/FAIL)
+- Vivado project · commit · bit path
+- XSA path · generation time
+- ELF path
+- Host app command and result (PASS/FAIL)
 
-드라이버 종류가 불명확하면 추측하지 말고 묻는다. MCP 금지.
+If the driver type is unclear, ask. Do not guess. No MCP.

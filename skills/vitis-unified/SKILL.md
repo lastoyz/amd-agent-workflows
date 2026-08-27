@@ -5,13 +5,13 @@ description: Build Vitis Unified platform and application from an XSA using viti
 
 # vitis-unified
 
-Vivado MCP가 없듯이 **Vitis MCP도 쓰지 않는다.** 한 작업 = 한 `build.py` → `vitis -s build.py`.
+Same as Vivado: **do not use a Vitis MCP either.** One job = one `build.py` → `vitis -s build.py`.
 
-Classic Vitis IDE / Eclipse `xsct` 를 새로 쓰지 말 것. 레거시 Tcl만 있으면 `vitis-xsct`로 이관.
+Do not start new work with Classic Vitis IDE / Eclipse `xsct`. If only legacy Tcl exists, migrate with `vitis-xsct`.
 
-환경: `settings64.sh` / `settings64.bat` 후 `vitis --version`. 없으면 사용자에게 경로를 묻는다.
+Environment: run `settings64.sh` / `settings64.bat`, then `vitis --version`. If missing, ask the user for the path.
 
-## 흐름
+## Flow
 
 ```text
 Vivado write_hw_platform / write_hw_platform -fixed  →  .xsa
@@ -22,11 +22,11 @@ workspace/<platform>/export/<platform>/<platform>.xpfm
 workspace/<app>/build/*.elf
 ```
 
-고정 XSA(bitstream 포함) vs extensible XSA(가속기 플랫폼)를 사용자와 확인한다. Embedded SW는 보통 **fixed XSA**.
+Confirm with the user: fixed XSA (includes bitstream) vs extensible XSA (accelerator platform). Embedded SW is usually a **fixed XSA**.
 
-## `build.py` 골격 (UG1400)
+## `build.py` skeleton (UG1400)
 
-API 이름은 버전에 따라 `hw_design` / `hw` 가 갈린다. 실패하면 에러를 보여 주고 멈춘다. 추측으로 키워드를 바꿔 재시도하지 말 것.
+API names split by version: `hw_design` vs `hw`. On failure, show the error and stop. Do not retry by guessing keywords.
 
 ```python
 import os
@@ -43,7 +43,7 @@ plat = client.create_platform_component(
     name="plat",
     hw_design=XSA,
     os="standalone",
-    cpu="psu_cortexa53_0",          # 보드에 맞게. MicroBlaze면 microblaze_0
+    cpu="psu_cortexa53_0",          # match the board. MicroBlaze → microblaze_0
     domain_name="standalone_ps",
 )
 plat.build()
@@ -62,11 +62,11 @@ app.build()
 vitis -s build.py
 ```
 
-Windows: `vitis.bat -s build.py`. 장시간 빌드는 타임아웃을 넉넉히 (10분+).
+Windows: `vitis.bat -s build.py`. Give long builds a generous timeout (10 min+).
 
-## 가드레일
+## Guardrails
 
-- CPU/OS/domain 이름을 XSA의 프로세서 리스트와 맞춘다. 모르면 `platform` 생성 후 에러 메시지를 사용자에게 보여 준다.
-- `hello_world` 템플릿은 스모크에만. 제품 소스는 `import_files`.
-- bitstream을 Vitis에서 다시 만들지 않는다. Vivado `write_bitstream` / `write_hw_platform` 산출을 쓴다.
-- 산출 ELF 경로를 `reports/vitis-unified.md`에 적는다.
+- Match CPU/OS/domain names to the processor list in the XSA. If unknown, create the `platform` and show the error to the user.
+- `hello_world` template is smoke-only. Product sources go through `import_files`.
+- Do not rebuild the bitstream in Vitis. Use Vivado `write_bitstream` / `write_hw_platform` outputs.
+- Write the output ELF path in `reports/vitis-unified.md`.

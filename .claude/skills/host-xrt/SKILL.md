@@ -5,30 +5,30 @@ description: Load xclbin and run host code with AMD XRT (xbutil, OpenCL or nativ
 
 # host-xrt
 
-대상: **XRT 셸**이 있는 가속기(Alveo, 일부 Versal 플랫폼). Bare PCIe XDMA 카드는 `host-xdma`.
+Target: accelerators with an **XRT shell** (Alveo, some Versal platforms). Bare PCIe XDMA cards are `host-xdma`.
 
 ```bash
 xbutil examine
-xbutil validate --device <bdf>    # 사용자 승인 후에만. 길다.
+xbutil validate --device <bdf>    # only after user approval. Long.
 ```
 
-`xclbin` 은 Vitis `v++` 링크 산출. Vivado `.bit`만 있다고 XRT 앱이 로드되지 않는다.
+`xclbin` is a Vitis `v++` link output. An XRT app will not load from a Vivado `.bit` alone.
 
-## 호스트 앱
+## Host app
 
-1. 디바이스 enumerate (`xcl::device` / `cl::Device`).
-2. `xclbin` load.
-3. 커널 핸들, BO(buffer object) alloc, 호스트↔디바이스 sync.
-4. 커널 실행, 결과 비교.
+1. Enumerate the device (`xcl::device` / `cl::Device`).
+2. Load `xclbin`.
+3. Kernel handle, BO (buffer object) alloc, host↔device sync.
+4. Run the kernel, compare results.
 
-OpenCL 과 XRT native를 한 파일에서 섞지 말 것. 기존 코드 스타일을 따른다.
+Do not mix OpenCL and XRT native in one file. Follow the existing code style.
 
-환경: `source /opt/xilinx/xrt/setup.sh` (Linux). Windows XRT는 설치 경로를 사용자에게 확인.
+Environment: `source /opt/xilinx/xrt/setup.sh` (Linux). On Windows XRT, confirm the install path with the user.
 
-## 가드레일
+## Guardrails
 
-- `xbutil reset` / 플래시 갱신은 사용자 승인 없이 하지 말 것.
-- UUID/xclbin이 셸과 안 맞으면 앱을 고치지 말고 xclbin 재빌드.
-- 리포트: `reports/xrt.md`에 BDF, xclbin 경로, 커널 이름, PASS/FAIL.
+- Do not `xbutil reset` or refresh flash without user approval.
+- If UUID/xclbin does not match the shell, rebuild the xclbin. Do not patch the app.
+- Report: BDF, xclbin path, kernel name, PASS/FAIL in `reports/xrt.md`.
 
-MCP 금지.
+No MCP.
