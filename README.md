@@ -10,7 +10,7 @@ Cursor / Claude Code가 **Vivado MCP Server 없이** AMD FPGA 흐름을 돌릴 �
 | **Vitis** | `vitis -s script.py`, `v++` / `vitis-run` | [Xilinx/ai-assisted-vitis](https://github.com/Xilinx/ai-assisted-vitis) (`vhls-opt`, `xsct-to-python-converter`) | CLI/Python 배치 레시피 (MCP 없음) |
 | **host_sw** | XDMA 캐릭터 디바이스, XRT | 없음 (드라이버 레포만) | bringup / XDMA / XRT |
 
-예제 RTL·랩 zip은 여기에 넣지 않는다. Vivado 랩 예제는 [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) 의 **`lab_training/`** (Tcl 우회는 `lab_training/without-mcp/`). GitLab: [jose/amd_vm](http://192.168.10.97:8080/jose/amd_vm).
+예제 RTL·랩 zip은 여기에 넣지 않는다. MCP 랩 원본은 [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) 의 **`lab_training/`**. MCP 없는 Tcl·agentic 축은 **`without-mcp/`** (랩 skill 대체에서 출발, official workflow 확장). GitLab: [jose/amd_vm](http://192.168.10.97:8080/jose/amd_vm).
 
 공식 AMD Git 클론·링크는 **[official/](official/README.md)** 에 모아 두었다. 서브모듈은 원 저장소를 그대로 가리킨다.
 
@@ -117,5 +117,5 @@ ECS Lab Vivado Agent Skill(`rtl-lint` 등)의 MCP-less Tcl 가이드는 공식 �
 
 ## 관련
 
-- 랩 예제 미러: [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) · GitLab [jose/amd_vm](http://192.168.10.97:8080/jose/amd_vm) · `lab_training/` · `lab_training/without-mcp/`
+- 랩 미러: [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) · GitLab [jose/amd_vm](http://192.168.10.97:8080/jose/amd_vm) · MCP 원본 `lab_training/` · Tcl/agentic `without-mcp/`
 - Confluence: [Vivado Agent Skill — MCP 없이 Tcl batch/GUI 우회](https://edelway.atlassian.net/wiki/spaces/~712020a9f82d3b6447487d89a832eff8293188/pages/56786949)
