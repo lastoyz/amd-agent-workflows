@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+*.jou
+*.log
+*.str
+*.backup
+vivado_pid*
+.Xil/
+*.dcp
+*.bit
+*.pdi
+*.xsa
+*.xclbin
+build/
+reports/
+__pycache__/
+*.pyc
