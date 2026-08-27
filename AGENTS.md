@@ -30,6 +30,10 @@
 
 모드가 헷갈리면 `vivado-modes` 부터.
 
+## 공식 원본
+
+업스트림 클론은 `official/` 이다. 읽기 전용. 고치지 말고 [official/README.md](official/README.md) 의 URL로 확인한다.
+
 ## 공식 AMD skill과의 관계
 
 - Vitis HLS 최적화의 긴 루프는 [Xilinx/ai-assisted-vitis `vhls-opt`](https://github.com/Xilinx/ai-assisted-vitis/tree/main/skill-hub/vhls-opt) 를 우선한다. 여기 `vitis-hls` 는 MCP 없는 CLI 최소 세트다.

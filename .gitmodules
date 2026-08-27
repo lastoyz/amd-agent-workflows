@@ -1,0 +1,12 @@
+[submodule "official/amd-skills"]
+	path = official/amd-skills
+	url = https://github.com/amd/skills.git
+[submodule "official/ai-assisted-vitis"]
+	path = official/ai-assisted-vitis
+	url = https://github.com/Xilinx/ai-assisted-vitis.git
+[submodule "official/fpl26-optimization-contest"]
+	path = official/fpl26-optimization-contest
+	url = https://github.com/Xilinx/fpl26_optimization_contest.git
+[submodule "official/magpie"]
+	path = official/magpie
+	url = https://github.com/AMD-AGI/Magpie.git

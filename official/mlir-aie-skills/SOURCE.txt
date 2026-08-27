@@ -1,0 +1,7 @@
+upstream: https://github.com/Xilinx/mlir-aie
+path_in_upstream: skills/
+commit: 035528f71cf1dd067ff01562fda99088678ca2b0
+date: 2026-08-26 23:16:32 +0000
+note: Full repo is ~2.1 GB. This directory is a snapshot of skills/ only.
+refresh: git clone --depth 1 --filter=blob:none --sparse https://github.com/Xilinx/mlir-aie.git && git sparse-checkout set skills
+license: see upstream (Apache-2.0 WITH LLVM-exception on skill files)
