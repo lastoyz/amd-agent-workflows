@@ -14,6 +14,21 @@ Cursor / Claude Code가 **Vivado MCP Server 없이** AMD FPGA 흐름을 돌릴 �
 
 공식 AMD Git 클론·링크는 **[official/](official/README.md)** 에 모아 두었다. 서브모듈은 원 저장소를 그대로 가리킨다.
 
+## 루프 (MCP 없이)
+
+ECS APAC Seoul 워크숍 랩은 Cursor / Claude Code를 **Vivado MCP Server**로 Vivado에 붙인다. 그 서버는 **아직 일반 출시되지 않았다**. 이 저장소는 오른쪽 경로다. 평소 Vivado 설치, Tcl mode, 디스크의 리포트.
+
+![Vivado AI Agent Loop — Without MCP](docs/without-mcp-loop.png)
+
+| | MCP 경로 (워크숍) | MCP 없는 경로 (이 저장소) |
+| --- | --- | --- |
+| 다리 | Vivado MCP Server (도구 호출) | Agent skill — 한 작업, 한 `.tcl` / `.py` |
+| Vivado 실행 | MCP `vivado_start` / `vivadoExecute` | `vivado -mode batch`, 파형·Hardware Manager가 필요할 때만 GUI Tcl Console |
+| 리포트 | MCP로 반환 | 파일에서 파싱 (`grep` / 스크립트) |
+| 가드레일 | 랩 HITL | **RTL / XDC를 고치기 전에 멈춤**, 그다음 명령 |
+
+왼쪽은 워크숍에서 배운 경로. 오른쪽이 MCP를 기다리지 않고 지금 돌릴 수 있는 경로다.
+
 ## 에이전트에게 주는 방법
 
 이 저장소를 워크스페이스로 열면 `.cursor/skills/` · `.claude/skills/` 가 자동으로 잡힌다.
