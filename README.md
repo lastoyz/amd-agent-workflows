@@ -14,6 +14,21 @@ Do not put example RTL or lab zips here. MCP lab originals live in [lastoyz/amd_
 
 Official AMD Git clones and links are collected in **[official/](official/README.md)**. Submodules point at the upstream repos as-is.
 
+## The loop (without MCP)
+
+The ECS APAC Seoul workshop labs connect Cursor / Claude Code to Vivado through a **Vivado MCP Server**. That server is **not generally released**. This repository is the right-hand path: a normal Vivado install, Tcl mode, reports on disk.
+
+![Vivado AI Agent Loop — Without MCP](docs/without-mcp-loop.png)
+
+| | MCP path (workshop) | MCP-free path (this repo) |
+| --- | --- | --- |
+| Bridge | Vivado MCP Server (tool calls) | Agent skill — one job, one `.tcl` / `.py` |
+| How Vivado runs | MCP `vivado_start` / `vivadoExecute` | `vivado -mode batch`, or the GUI Tcl Console when you need waveforms or Hardware Manager |
+| Reports | Returned through MCP | Parsed from files (`grep` / a small script) |
+| Guardrail | Lab HITL | **Pause before editing RTL / XDC**, then the next command |
+
+Left column is what the workshop taught. Right column is what you can run today without waiting for MCP.
+
 ## How to give this to an agent
 
 Opening this repo as the workspace auto-loads `.cursor/skills/` and `.claude/skills/`.
