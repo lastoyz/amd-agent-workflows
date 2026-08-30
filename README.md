@@ -10,7 +10,7 @@ One job = one script. Do not call MCP tools (`vivado_start`, `vivadoExecute`, `m
 | **Vitis** | `vitis -s script.py`, `v++` / `vitis-run` | [Xilinx/ai-assisted-vitis](https://github.com/Xilinx/ai-assisted-vitis) (`vhls-opt`, `xsct-to-python-converter`) | CLI/Python batch recipes (no MCP) |
 | **host_sw** | XDMA character devices, XRT | None (driver repos only) | bringup / XDMA / XRT |
 
-Do not put example RTL or lab zips here. MCP lab originals live in [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) under **`lab_training/`**. The Tcl/agentic path without MCP is **`without-mcp/`** (started as lab-skill replacements, then extended with official workflows). GitLab (internal Korean mirror): [jose/amd_vm](http://192.168.10.97:8080/jose/amd_vm).
+Do not put example RTL or lab zips here. MCP lab originals live in [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) under **`lab_training/`**. The Tcl/agentic path without MCP is **`without-mcp/`** (started as lab-skill replacements, then extended with official workflows).
 
 Official AMD Git clones and links are collected in **[official/](official/README.md)**. Submodules point at the upstream repos as-is.
 
@@ -129,9 +129,8 @@ ECS Lab Vivado Agent Skills (`rtl-lint` and similar) have no MCP-less Tcl guide 
 | --- | --- |
 | GitHub (English, `main`) | https://github.com/lastoyz/amd-agent-workflows |
 | GitHub (Korean, `ko`) | https://github.com/lastoyz/amd-agent-workflows/tree/ko |
-| GitLab (internal Korean mirror) | http://192.168.10.97:8080/jose/amd-agent-workflows |
 
 ## Related
 
-- Lab mirror: [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) · GitLab (internal Korean mirror) [jose/amd_vm](http://192.168.10.97:8080/jose/amd_vm) · MCP originals in `lab_training/` · Tcl/agentic in `without-mcp/`
+- Lab mirror: [lastoyz/amd_vm](https://github.com/lastoyz/amd_vm) · MCP originals in `lab_training/` · Tcl/agentic in `without-mcp/`
 - Confluence: [Vivado Agent Skill — Tcl batch/GUI bypass without MCP](https://edelway.atlassian.net/wiki/spaces/~712020a9f82d3b6447487d89a832eff8293188/pages/56786949)

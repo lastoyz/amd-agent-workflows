@@ -98,4 +98,3 @@ ECS Lab Vivado Agent Skills (`rtl-lint` and similar) have no public official Git
 | --- | --- |
 | GitHub (English, `main`) | https://github.com/lastoyz/amd-agent-workflows/tree/main/official |
 | GitHub (Korean, `ko`) | https://github.com/lastoyz/amd-agent-workflows/tree/ko/official |
-| GitLab (internal Korean mirror) | http://192.168.10.97:8080/jose/amd-agent-workflows/-/tree/main/official |
